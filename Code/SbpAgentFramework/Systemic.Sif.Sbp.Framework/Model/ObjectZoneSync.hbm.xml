@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Systemic.Sif.Sbp.Framework" namespace="Systemic.Sif.Sbp.Framework.Model">
+  <class name="ObjectZoneSync" table="SCF_OBJECT_ZONE_SYNC">
+    <id name="Id" column="OBJECT_ZONE_SYNC_ID">
+      <generator class="native"/>
+    </id>
+    <property name="SifObjectName" column="SIF_OBJECT_NAME" length="45"/>
+    <property name="ZoneId" column="ZONE_ID" length="45"/>
+    <property name="AgentId" column="AGENT_ID" length="45"/>
+    <property name="LastRequested" column="LAST_REQUESTED"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FA3EFB93-8BE9-4459-997F-42B4F899ABD0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Systemic.Sif.Sbp.Framework</RootNamespace>
+    <AssemblyName>Systemic.Sif.Sbp.Framework</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Edustructures.SifWorks.Adk-AU">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Edustructures.SifWorks.Adk-AU.dll</HintPath>
+    </Reference>
+    <Reference Include="Edustructures.SifWorks.SdoAll-AU">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Edustructures.SifWorks.SdoAll-AU.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\..\SharedLibs\log4net-1.2.10\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\..\SharedLibs\NHibernate-3.2.0.GA\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Org.Mentalis.Security">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Org.Mentalis.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Systemic.Sif.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SharedLibs\Systemic.Sif.Framework 1.2.x\Systemic.Sif.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Agent\PublishingAgent.cs" />
+    <Compile Include="Agent\SubscribingAgent.cs" />
+    <Compile Include="Model\CachedObject.cs" />
+    <Compile Include="Model\DependentObject.cs" />
+    <Compile Include="Model\Metadata\SifDataObjectMetadata.cs" />
+    <Compile Include="Model\Metadata\SifRefIdMetadata.cs" />
+    <Compile Include="Model\Metadata\StaffAssignmentMetadata.cs" />
+    <Compile Include="Model\Metadata\StudentContactRelationshipMetadata.cs" />
+    <Compile Include="Model\Metadata\StudentSchoolEnrollmentMetadata.cs" />
+    <Compile Include="Model\Metadata\TeachingGroupMetadata.cs" />
+    <Compile Include="Model\ObjectZoneSync.cs" />
+    <Compile Include="Persistence\ICachedObjectDao.cs" />
+    <Compile Include="Persistence\IDependentObjectDao.cs" />
+    <Compile Include="Persistence\IObjectZoneSyncDao.cs" />
+    <Compile Include="Persistence\NHibernate\CachedObjectDao.cs" />
+    <Compile Include="Persistence\NHibernate\DependentObjectDao.cs" />
+    <Compile Include="Persistence\NHibernate\GenericDao.cs" />
+    <Compile Include="Persistence\IGenericDao.cs" />
+    <Compile Include="Persistence\IPersistable.cs" />
+    <Compile Include="Persistence\NHibernate\NHibernateHelper.cs" />
+    <Compile Include="Persistence\NHibernate\ObjectZoneSyncDao.cs" />
+    <Compile Include="Persistence\PersistenceException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publisher\Baseline\SchoolInfoPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StaffAssignmentPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StaffPersonalPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StudentContactPersonalPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StudentContactRelationshipPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StudentPersonalPublisher.cs" />
+    <Compile Include="Publisher\Baseline\StudentSchoolEnrollmentPublisher.cs" />
+    <Compile Include="Publisher\Baseline\TeachingGroupPublisher.cs" />
+    <Compile Include="Publisher\GenericPublisher.cs" />
+    <Compile Include="Service\DependentObjectCacheService.cs" />
+    <Compile Include="Service\IDependentObjectCacheService.cs" />
+    <Compile Include="Service\ISyncService.cs" />
+    <Compile Include="Service\SyncService.cs" />
+    <Compile Include="Subscriber\Baseline\SchoolInfoSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StaffAssignmentSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StaffPersonalSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StudentContactPersonalSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StudentContactRelationshipSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StudentPersonalSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\StudentSchoolEnrollmentSubscriber.cs" />
+    <Compile Include="Subscriber\Baseline\TeachingGroupSubscriber.cs" />
+    <Compile Include="Subscriber\CachingSubscriber.cs" />
+    <Compile Include="Subscriber\NonCachingSubscriber.cs" />
+    <Compile Include="Subscriber\WithDependentsCachingSubscriber.cs" />
+    <Compile Include="Subscriber\WithoutDependentsCachingSubscriber.cs" />
+    <Compile Include="Subscriber\SyncSubscriber.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\ObjectZoneSync.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Model\DependentObject.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Model\CachedObject.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scf.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

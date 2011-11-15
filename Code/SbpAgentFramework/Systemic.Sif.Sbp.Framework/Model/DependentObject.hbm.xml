@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="Systemic.Sif.Sbp.Framework" namespace="Systemic.Sif.Sbp.Framework.Model">
+  <class name="DependentObject" table="SCF_DEPENDENT_OBJECT">
+    <id name="Id" column="DEPENDENT_OBJECT_ID">
+      <generator class="native"/>
+    </id>
+    <property name="SifObjectName" column="SIF_OBJECT_NAME" length="45"/>
+    <property name="ObjectKeyValue" column="OBJECT_KEY_VALUE" length="256"/>
+    <property name="AgentId" column="AGENT_ID" length="45"/>
+    <property name="ApplicationId" column="APPLICATION_ID" length="45"/>
+    <property name="Requested">
+      <column name="REQUESTED" default="false"/>
+    </property>
+    <property name="RequestedDate" column="REQUESTED_DATE"/>
+    <property name="ZoneId" column="ZONE_ID" length="45"/>
+    <set name="ParentObjects" table="DEPENDENT_OBJECT_LIST">
+      <key column="DEPENDENT_OBJECT_ID"/>
+      <many-to-many column="CACHED_OBJECT_ID" class="Systemic.Sif.Sbp.Framework.Model.CachedObject"/>
+    </set>
+  </class>
+</hibernate-mapping>

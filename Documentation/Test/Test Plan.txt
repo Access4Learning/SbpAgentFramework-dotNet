@@ -1,0 +1,117 @@
+Test Case 1
+    Description
+        Publish a StudentPersonal event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=0
+        publisher.StudentPersonal.eventFrequency=10000
+        publisher.StudentSchoolEnrollment.eventFrequency=0
+        subscriber.SchoolInfo.cache.checkFrequency=0
+        subscriber.StudentPersonal.cache.checkFrequency=0
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=0
+    Expected Outcome
+        The event will be processed and the StudentPersonal details printed to the console.
+    Result
+        Success
+
+Test Case 2
+    Description
+        Publish a SchoolInfo event, then StudentPersonal event, then StudentSchoolEnrollment event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=30000
+        publisher.StudentPersonal.eventFrequency=35000
+        publisher.StudentSchoolEnrollment.eventFrequency=40000
+        subscriber.SchoolInfo.cache.checkFrequency=0
+        subscriber.StudentPersonal.cache.checkFrequency=0
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=0
+        DoesObjectExistInTargetSystem(SchoolInfo)=true
+        DoesObjectExistInTargetSystem(StudentPersonal)=true
+    Expected Outcome
+        All events will be processed in order and their details printed to the console.
+    Result
+        Success
+
+Test Case 3
+    Description
+        Publish a StudentSchoolEnrollment event, then SchoolInfo event, then StudentPersonal event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=40000
+        publisher.StudentPersonal.eventFrequency=45000
+        publisher.StudentSchoolEnrollment.eventFrequency=25000
+        subscriber.SchoolInfo.cache.checkFrequency=0
+        subscriber.StudentPersonal.cache.checkFrequency=0
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=70000
+        DoesObjectExistInTargetSystem(SchoolInfo)=false
+        DoesObjectExistInTargetSystem(StudentPersonal)=false
+    Expected Outcome
+        The StudentSchoolEnrollment event will be cached with missing dependencies to SchoolInfo and StudentPersonal. When the SchoolInfo event arrives it will be processed and it's dependency in the cache removed. When the StudentPersonal event arrives it will be processed and it's dependency in the cache removed. After 70 seconds, the cached StudentSchoolEnrollment event will be processed and it's details printed to the console.
+    Result
+        Success
+
+Test Case 4
+    Description
+        Publish a SchoolInfo event, then StudentSchoolEnrollment event, then StudentPersonal event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=5000
+        publisher.StudentPersonal.eventFrequency=0
+        publisher.StudentSchoolEnrollment.eventFrequency=25000
+        subscriber.SchoolInfo.cache.checkFrequency=40000
+        subscriber.StudentPersonal.cache.checkFrequency=65000
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=50000
+        DoesObjectExistInTargetSystem(SchoolInfo)=true
+        DoesObjectExistInTargetSystem(StudentPersonal)=false
+    Steps
+        Start PublishingAgent.
+        Start SubscribingAgent.
+        After 5 seconds, check Publisher console to confirm that SchoolInfo has been sent.
+        After 25 seconds, check Publisher console to confirm that StudentSchoolEnrollment has been sent.
+        After 30 seconds, check Subscriber console to confirm that SchoolInfo has been received and processed.
+        After 30 seconds, check Subscriber console and database to confirm that StudentSchoolEnrollment has been cached with a StudentPersonal dependency.
+        After 40 seconds, check Subscriber console to confirm that there are no cached SchoolInfo dependents.
+        After 50 seconds, check Subscriber console to confirm that there are no cached StudentSchoolEnrollment objects with NO dependencies.
+        After 65 seconds, check Subscriber console to confirm that there is a cached StudentPersonal dependent that has been requested.
+        Check Publisher console to confirm that a StudentPersonal response has been sent.
+        Check Subscriber console to confirm that a StudentPersonal response has been received, processed and removed from cache.
+        After 100 seconds, check Subscriber console and database to confirm that StudentSchoolEnrollment has been processed and it has been removed from the cache.
+        After testing, there should be no entries in the database.
+    Expected Outcome
+        The SchoolInfo event will be processed and it's details printed to the console. When the StudentSchoolEnrollment event arrives it will be cached with a missing dependency to StudentPersonal. After about 1 minute, a request will be made for the missing StudentPersonal message. When the StudentPersonal event arrives it will be processed and it's dependency in the cache removed. After about 2 minutes, the cached StudentSchoolEnrollment event will be processed and it's details printed to the console.
+    Result
+        Success
+
+Test Case 5
+    Description
+        Publish a StudentSchoolEnrollment event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=0
+        publisher.StudentPersonal.eventFrequency=0
+        publisher.StudentSchoolEnrollment.eventFrequency=10000
+        subscriber.SchoolInfo.cache.checkFrequency=0
+        subscriber.StudentPersonal.cache.checkFrequency=0
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=40000
+        subscriber.StudentSchoolEnrollment.cache.expiryStrategy=EXPIRE
+        subscriber.StudentSchoolEnrollment.cache.expiryPeriod=60000
+        DoesObjectExistInTargetSystem(SchoolInfo)=false
+        DoesObjectExistInTargetSystem(StudentPersonal)=false
+    Expected Outcome
+        The StudentSchoolEnrollment event will be cached with missing dependencies to SchoolInfo and StudentPersonal. The first check of the cache will do nothing, the second check will expire (remove) the cached StudentSchoolEnrollment event.
+    Result
+        Success
+
+Test Case 5
+    Description
+        Publish a StudentSchoolEnrollment event.
+    Configuration
+        publisher.SchoolInfo.eventFrequency=0
+        publisher.StudentPersonal.eventFrequency=0
+        publisher.StudentSchoolEnrollment.eventFrequency=10000
+        subscriber.SchoolInfo.cache.checkFrequency=0
+        subscriber.StudentPersonal.cache.checkFrequency=0
+        subscriber.StudentSchoolEnrollment.cache.checkFrequency=40000
+        subscriber.StudentSchoolEnrollment.cache.expiryStrategy=REQUEST
+        subscriber.StudentSchoolEnrollment.cache.expiryPeriod=60000
+        DoesObjectExistInTargetSystem(SchoolInfo)=false
+        DoesObjectExistInTargetSystem(StudentPersonal)=false
+    Expected Outcome
+        The StudentSchoolEnrollment event will be cached with missing dependencies to SchoolInfo and StudentPersonal. The first check of the cache will do nothing, the second check will set the requested flag of dependents to false and increment expiry date by 1 minute.
+    Result
+        Success

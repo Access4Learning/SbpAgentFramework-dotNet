@@ -1,0 +1,33 @@
+Used?	Joerg's Method Name			Raf's Method Name			Implementation
+
+Yes	getDependenciesFromSIFObjectAndCache	parseDependenciesFromSifObjectMessage	Hard
+No	retrieveCachedObject			N/A					N/A
+Yes	retrieveCachedObject (flatKey)		retrieveCachedObject			Easy
+Yes	cacheObject				storeObjectInCache			Medium with re-write
+Yes1	mergeWithCachedDependencies		N/A					Hard, merge with getDependenciesFromSIFObjectAndCache
+Yes	checkAndRemoveDependency		checkAndRemoveDependency		Medium
+Yes2	checkAndRemoveDependency (flatKey)	N/A					Medium, merge with checkAndRemoveDependency
+Yes	getNotYetRequestedObjects		retrieveNotYetRequested			Medium
+Yes	getObjectsWithoutDependencies		retrieveByNoDependencies		Easy
+No	getExpiredObjects			N/A					N/A
+Yes	removeCachedObject			deleteCachedObject			Easy
+Yes	updateExpiredObjects			updateExpiredObjects			Medium
+
+Yes	hasPotentialDependencies		hasPotentialDependencies		Easy (required?)
+Yes	extractFlatKey				extractFlatKey				Easy (moved to a Utils class?)
+Yes3	extractDependentObjectsFromSIFObject	N/A					Hard, merge with getDependenciesFromSIFObjectAndCache
+
+Yes4	extractDependentObjects			N/A					Hard, merge with extractDependentObjectsFromSIFObject
+Yes5	extractDependentObjectInfo		N/A					Hard, merge with extractDependentObjects
+Yes6	extractDependentKeyValuesFromSIFObject	N/A					Hard, merge with extractDependentObjectInfo
+Yes	extractFlatKey (orderedKeyList)		extractFlatKey				Medium
+Yes	flattenOrderedKey			flattenOrderedKey			Easy
+Yes	checkMetadataCache			N/A					N/A
+Yes	exceptionMapper				N/A					N/A
+
+1 - Used internally by getDependenciesFromSIFObjectAndCache
+2 - Used internally by checkAndRemoveDependency
+3 - Used internally by getDependenciesFromSIFObjectAndCache
+4 - Used internally by extractDependentObjectsFromSIFObject
+5 - Used internally by extractDependentObjects
+6 - Used internally by extractDependentObjectInfo
