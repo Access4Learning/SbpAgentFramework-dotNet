@@ -1,9 +1,0 @@
-Model Object		Mapping	Class	DAO	DAO Test	Service	Service Test
-ObjectZoneSync		Yes	Yes	Yes	Yes		Yes	Yes
-CachedObject		Yes	Yes	Yes	Yes
-DependentObject		Yes	Yes	Yes	Yes
-SifObject		Yes	Yes	N/A	Yes		Yes	N/A
-SifObjectKey		Yes	Yes	N/A	N/A		N/A	N/A
-AssociatedObject	Yes	Yes	N/A	N/A		N/A	N/A
-AssociatedObjectKey	Yes	Yes	N/A	N/A		N/A	N/A
-
