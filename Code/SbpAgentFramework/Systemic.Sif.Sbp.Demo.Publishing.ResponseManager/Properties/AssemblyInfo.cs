@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Systemic.Sif.Sbp.Agent")]
+[assembly: AssemblyTitle("Systemic.Sif.Sbp.Demo.Publishing.ResponseManager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Systemic.Sif.Sbp.Agent")]
+[assembly: AssemblyProduct("Systemic.Sif.Sbp.Demo.Publishing.ResponseManager")]
 [assembly: AssemblyCopyright("Copyright ©  2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("44e77f7a-f74d-4165-80ba-471997de28dd")]
+[assembly: Guid("6ef108c4-7cc0-45f7-8000-006738a4c652")]
 
 // Version information for an assembly consists of the following four values:
 //

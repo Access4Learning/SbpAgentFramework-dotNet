@@ -19,11 +19,28 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
             set { }
         }
 
+        protected override int RequestFrequency
+        {
+            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".requestFrequency", 0); }
+            set {  }
+        }
+
         public StudentPersonalSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
             agentProperties = new AgentProperties(null);
             AgentConfiguration.GetAgentProperties(agentProperties);
+        }
+
+        protected override void AddToBroadcastRequestQuery(Query query, IZone zone)
+        {
+            if (log.IsDebugEnabled) log.Debug("Added a condition to the request query for StudentPersonal SIF RefId of 7C834EA9EDA12090347F83297E1C290C.");
+            query.AddCondition(StudentDTD.STUDENTPERSONAL_REFID, ComparisonOperators.EQ, "7C834EA9EDA12090347F83297E1C290C");
+        }
+
+        protected override bool MakeRequest(IZone zone)
+        {
+            return true;
         }
 
         protected override void ProcessEvent(SifEvent<StudentPersonal> sifEvent, IZone zone)

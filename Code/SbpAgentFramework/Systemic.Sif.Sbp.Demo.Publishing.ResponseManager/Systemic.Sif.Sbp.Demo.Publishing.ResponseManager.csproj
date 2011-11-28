@@ -5,13 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9D6DCDB1-C55A-48A7-9B59-1085ADF82356}</ProjectGuid>
+    <ProjectGuid>{D07D68D0-50DD-4549-B350-72AEE172A581}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Systemic.Sif.Sbp.Agent</RootNamespace>
-    <AssemblyName>Systemic.Sif.Sbp.Agent</AssemblyName>
+    <RootNamespace>Systemic.Sif.Sbp.Demo.Publishing.ResponseManager</RootNamespace>
+    <AssemblyName>Systemic.Sif.Sbp.Demo.Publishing.ResponseManager</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -34,6 +35,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Edustructures.SifWorks.Adk-AU">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Edustructures.SifWorks.Adk-AU.dll</HintPath>
+    </Reference>
+    <Reference Include="Edustructures.SifWorks.SdoAll-AU">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Edustructures.SifWorks.SdoAll-AU.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\..\SharedLibs\log4net-1.2.10\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Org.Mentalis.Security">
+      <HintPath>..\..\..\..\..\SharedLibs\SifWorks-Adk.Net-2.3.2.1-AU-release\Org.Mentalis.Security.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,10 +54,29 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Systemic.Sif.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SharedLibs\Systemic.Sif.Framework 1.2.x\Systemic.Sif.Framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="GenericIterator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishingAgent.cs" />
+    <Compile Include="StudentPersonalIterator.cs" />
+    <Compile Include="StudentPersonalPublisher.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="PublishingAgent.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Systemic.Sif.Sbp.Framework\Systemic.Sif.Sbp.Framework.csproj">
+      <Project>{FA3EFB93-8BE9-4459-997F-42B4F899ABD0}</Project>
+      <Name>Systemic.Sif.Sbp.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
