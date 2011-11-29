@@ -38,11 +38,6 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
             query.AddCondition(StudentDTD.STUDENTPERSONAL_REFID, ComparisonOperators.EQ, "7C834EA9EDA12090347F83297E1C290C");
         }
 
-        protected override bool MakeRequest(IZone zone)
-        {
-            return true;
-        }
-
         protected override void ProcessEvent(SifEvent<StudentPersonal> sifEvent, IZone zone)
         {
             if (log.IsDebugEnabled) log.Debug(sifEvent.SifDataObject.ToXml());

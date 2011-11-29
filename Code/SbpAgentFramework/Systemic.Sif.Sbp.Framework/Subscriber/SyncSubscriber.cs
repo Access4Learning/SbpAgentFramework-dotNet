@@ -15,7 +15,11 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
     /// <typeparam name="T">The type of SIF Data Object this Subscriber processes, e.g. StudentPersonal, Schoolnfo, etc.</typeparam>
     public abstract class SyncSubscriber<T> : GenericSubscriber<T> where T : SifDataObject, new()
     {
-        int requestFrequency = 0;
+        // Create a logger for use in this class.
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        int requestFrequency = 3600000;
+        ISyncService syncService = new SyncService();
 
         protected override int RequestFrequency
         {
@@ -35,24 +39,20 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
         protected override bool MakeRequest(IZone zone)
         {
-            return false;
+            bool makeRequest = syncService.IsSyncRequired(SifObjectType.Name, AgentConfiguration.SourceId, zone.ZoneId);
+            if (log.IsDebugEnabled) log.Debug("Make request is " + makeRequest + " for SIF Object " + SifObjectType + " and Agent " + AgentConfiguration.SourceId + " and Zone " + zone.ZoneId + ".");
+            return makeRequest;
         }
 
         /// <summary>
-        /// Override the default behavious of the SIF Common Framework base Subscriber.
+        /// Override the default behaviour of the SIF Common Framework base Subscriber.
         /// </summary>
         /// <param name="zone">Zone to synchronise with.</param>
-        /// <see cref="Systemic.Sif.Framework.Subscriber.GenericSubscriber{T}.Sync(Edustructures.SifWorks.IZone)"/>
-        public override void Sync(IZone zone)
+        /// <see cref="Systemic.Sif.Framework.Subscriber.GenericSubscriber{T}.BroadcastRequest(Edustructures.SifWorks.IZone)"/>
+        protected override void BroadcastRequest(IZone zone)
         {
-            ISyncService syncService = new SyncService();
-
-            if (syncService.IsSyncRequired(SifObjectType.Name, AgentConfiguration.SourceId, zone.ZoneId))
-            {
-                base.Sync(zone);
-                syncService.MarkAsSynced(SifObjectType.Name, AgentConfiguration.SourceId, zone.ZoneId);
-            }
-
+            base.BroadcastRequest(zone);
+            syncService.MarkAsSynced(SifObjectType.Name, AgentConfiguration.SourceId, zone.ZoneId);
         }
 
     }
