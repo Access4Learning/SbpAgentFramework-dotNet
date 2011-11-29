@@ -19,14 +19,24 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Publisher.Baseline
 {
 
+    /// <summary>
+    /// A Publisher of SchoolInfo.
+    /// </summary>
     public abstract class SchoolInfoPublisher : GenericPublisher<SchoolInfo>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public SchoolInfoPublisher()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Publisher.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Publisher.</param>
         public SchoolInfoPublisher(AgentConfig agentConfig)
             : base(agentConfig)
         {

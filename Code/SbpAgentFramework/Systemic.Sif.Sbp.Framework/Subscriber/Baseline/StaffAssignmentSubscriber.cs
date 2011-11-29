@@ -20,19 +20,34 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of StaffAssignment.
+    /// </summary>
     public abstract class StaffAssignmentSubscriber : WithDependentsCachingSubscriber<StaffAssignment>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public StaffAssignmentSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public StaffAssignmentSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
         }
 
+        /// <summary>
+        /// This (factory) method returns meta-data associated with the StaffAssignment instance passed.
+        /// </summary>
+        /// <param name="staffAssignment">StaffAssignment instance.</param>
+        /// <returns>Meta-data associated with the StaffAssignment instance.</returns>
         internal override SifDataObjectMetadata<StaffAssignment> MetadataInstance(StaffAssignment staffAssignment)
         {
             return new StaffAssignmentMetadata(staffAssignment);

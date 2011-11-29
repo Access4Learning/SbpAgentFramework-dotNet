@@ -19,14 +19,24 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of StudentPersonal.
+    /// </summary>
     public abstract class StudentPersonalSubscriber : WithoutDependentsCachingSubscriber<StudentPersonal>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public StudentPersonalSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public StudentPersonalSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {

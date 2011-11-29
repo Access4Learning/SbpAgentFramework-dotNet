@@ -19,14 +19,25 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Publisher
 {
 
+    /// <summary>
+    /// A Publisher that is simply based upon the SIF Common Framework.
+    /// </summary>
+    /// <typeparam name="T">SIF Data Object type such as StudentPersonal, SchoolInfo, etc.</typeparam>
     public abstract class GenericPublisher<T> : Systemic.Sif.Framework.Publisher.GenericPublisher<T> where T : SifDataObject, new()
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public GenericPublisher()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Publisher.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Publisher.</param>
         public GenericPublisher(AgentConfig agentConfig)
             : base(agentConfig)
         {

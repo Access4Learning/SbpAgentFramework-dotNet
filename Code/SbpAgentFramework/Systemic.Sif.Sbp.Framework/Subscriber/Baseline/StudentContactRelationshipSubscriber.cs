@@ -20,19 +20,34 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of StudentContactRelationship.
+    /// </summary>
     public abstract class StudentContactRelationshipSubscriber : WithDependentsCachingSubscriber<StudentContactRelationship>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public StudentContactRelationshipSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public StudentContactRelationshipSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
         }
 
+        /// <summary>
+        /// This (factory) method returns meta-data associated with the StudentContactRelationship instance passed.
+        /// </summary>
+        /// <param name="studentContactRelationship">StudentContactRelationship instance.</param>
+        /// <returns>Meta-data associated with the StudentContactRelationship instance.</returns>
         internal override SifDataObjectMetadata<StudentContactRelationship> MetadataInstance(StudentContactRelationship studentContactRelationship)
         {
             return new StudentContactRelationshipMetadata(studentContactRelationship);

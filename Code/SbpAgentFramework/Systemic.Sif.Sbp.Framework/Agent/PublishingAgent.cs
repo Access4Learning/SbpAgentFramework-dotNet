@@ -16,6 +16,9 @@
 namespace Systemic.Sif.Sbp.Framework.Agent
 {
 
+    /// <summary>
+    /// A publishing Agent that is simply based upon the SIF Common Framework.
+    /// </summary>
     public abstract class PublishingAgent : Systemic.Sif.Framework.Agent.PublishingAgent
     {
         // Create a logger for use in this class.

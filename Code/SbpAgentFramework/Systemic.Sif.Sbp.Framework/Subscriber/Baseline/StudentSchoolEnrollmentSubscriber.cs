@@ -20,19 +20,34 @@ using Systemic.Sif.Sbp.Framework.Model.Metadata;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of StudentSchoolEnrollment.
+    /// </summary>
     public abstract class StudentSchoolEnrollmentSubscriber : WithDependentsCachingSubscriber<StudentSchoolEnrollment>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public StudentSchoolEnrollmentSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public StudentSchoolEnrollmentSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
         }
 
+        /// <summary>
+        /// This (factory) method returns meta-data associated with the StudentSchoolEnrollment instance passed.
+        /// </summary>
+        /// <param name="studentSchoolEnrollment">StudentSchoolEnrollment instance.</param>
+        /// <returns>Meta-data associated with the StudentSchoolEnrollment instance.</returns>
         internal override SifDataObjectMetadata<StudentSchoolEnrollment> MetadataInstance(StudentSchoolEnrollment studentSchoolEnrollment)
         {
             return new StudentSchoolEnrollmentMetadata(studentSchoolEnrollment);

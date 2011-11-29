@@ -19,14 +19,24 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of SchoolInfo.
+    /// </summary>
     public abstract class SchoolInfoSubscriber : WithoutDependentsCachingSubscriber<SchoolInfo>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public SchoolInfoSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public SchoolInfoSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {

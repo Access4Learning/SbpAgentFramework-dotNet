@@ -20,19 +20,34 @@ using Systemic.Sif.Sbp.Framework.Model.Metadata;
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
 {
 
+    /// <summary>
+    /// A Subscriber of TeachingGroup.
+    /// </summary>
     public abstract class TeachingGroupSubscriber : WithDependentsCachingSubscriber<TeachingGroup>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public TeachingGroupSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
         public TeachingGroupSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
         }
 
+        /// <summary>
+        /// This (factory) method returns meta-data associated with the TeachingGroup instance passed.
+        /// </summary>
+        /// <param name="teachingGroup">TeachingGroup instance.</param>
+        /// <returns>Meta-data associated with the TeachingGroup instance.</returns>
         internal override SifDataObjectMetadata<TeachingGroup> MetadataInstance(TeachingGroup teachingGroup)
         {
             return new TeachingGroupMetadata(teachingGroup);

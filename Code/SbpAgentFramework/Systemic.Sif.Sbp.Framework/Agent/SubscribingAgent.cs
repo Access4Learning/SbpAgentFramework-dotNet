@@ -16,6 +16,9 @@
 namespace Systemic.Sif.Sbp.Framework.Agent
 {
 
+    /// <summary>
+    /// A subscribing Agent that is simply based upon the SIF Common Framework.
+    /// </summary>
     public abstract class SubscribingAgent : Systemic.Sif.Framework.Agent.SubscribingAgent
     {
 

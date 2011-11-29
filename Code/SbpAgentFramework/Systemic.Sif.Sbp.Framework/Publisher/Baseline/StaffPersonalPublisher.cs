@@ -19,14 +19,24 @@ using Edustructures.SifWorks.Tools.Cfg;
 namespace Systemic.Sif.Sbp.Framework.Publisher.Baseline
 {
 
+    /// <summary>
+    /// A Publisher of StaffPersonal.
+    /// </summary>
     public abstract class StaffPersonalPublisher : GenericPublisher<StaffPersonal>
     {
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public StaffPersonalPublisher()
             : base()
         {
         }
 
+        /// <summary>
+        /// This constructor specifies the configuration settings associated with this Publisher.
+        /// </summary>
+        /// <param name="agentConfig">Configuration settings associated with this Publisher.</param>
         public StaffPersonalPublisher(AgentConfig agentConfig)
             : base(agentConfig)
         {
