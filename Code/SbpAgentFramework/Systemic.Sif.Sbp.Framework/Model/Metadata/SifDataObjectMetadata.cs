@@ -21,7 +21,7 @@ using Edustructures.SifWorks;
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {
 
-    internal class SifDataObjectMetadata<T> where T : SifDataObject
+    public class SifDataObjectMetadata<T> where T : SifDataObject
     {
         protected T sifDataObject;
 

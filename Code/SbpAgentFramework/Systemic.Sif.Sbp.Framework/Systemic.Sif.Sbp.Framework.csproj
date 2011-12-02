@@ -63,10 +63,14 @@
     <Compile Include="Agent\SubscribingAgent.cs" />
     <Compile Include="Model\CachedObject.cs" />
     <Compile Include="Model\DependentObject.cs" />
+    <Compile Include="Model\Metadata\SchoolInfoMetadata.cs" />
     <Compile Include="Model\Metadata\SifDataObjectMetadata.cs" />
     <Compile Include="Model\Metadata\SifRefIdMetadata.cs" />
     <Compile Include="Model\Metadata\StaffAssignmentMetadata.cs" />
+    <Compile Include="Model\Metadata\StaffPersonalMetadata.cs" />
+    <Compile Include="Model\Metadata\StudentContactPersonalMetadata.cs" />
     <Compile Include="Model\Metadata\StudentContactRelationshipMetadata.cs" />
+    <Compile Include="Model\Metadata\StudentPersonalMetadata.cs" />
     <Compile Include="Model\Metadata\StudentSchoolEnrollmentMetadata.cs" />
     <Compile Include="Model\Metadata\TeachingGroupMetadata.cs" />
     <Compile Include="Model\ObjectZoneSync.cs" />

@@ -20,7 +20,7 @@ using Edustructures.SifWorks.Learning;
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {
 
-    class TeachingGroupMetadata : SifDataObjectMetadata<TeachingGroup>
+    public class TeachingGroupMetadata : SifDataObjectMetadata<TeachingGroup>
     {
 
         public override ICollection<DependentObject> DependentObjects

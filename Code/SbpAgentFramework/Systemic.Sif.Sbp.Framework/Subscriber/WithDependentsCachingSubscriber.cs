@@ -172,7 +172,7 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
                         (metadata.ObjectName,
                         metadata.SifUniqueId,
                         sifDataObject.ToXml(),
-                        eventAction.ToString(),
+                        (eventAction == null ? null : eventAction.ToString()),
                         AgentConfiguration.SourceId,
                         ApplicationId,
                         zone.ZoneId,

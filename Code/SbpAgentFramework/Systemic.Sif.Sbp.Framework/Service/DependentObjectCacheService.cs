@@ -103,7 +103,6 @@ namespace Systemic.Sif.Sbp.Framework.Service
             if (String.IsNullOrEmpty(sifObjectName) ||
                 String.IsNullOrEmpty(objectKeyValue) ||
                 String.IsNullOrEmpty(sifDataObjectXml) ||
-                String.IsNullOrEmpty(eventAction) ||
                 String.IsNullOrEmpty(agentId) ||
                 String.IsNullOrEmpty(applicationId) ||
                 String.IsNullOrEmpty(zoneId) ||

@@ -16,7 +16,7 @@
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {
 
-    class SifRefIdMetadata
+    public class SifRefIdMetadata
     {
         private string @value;
         private string xPath;

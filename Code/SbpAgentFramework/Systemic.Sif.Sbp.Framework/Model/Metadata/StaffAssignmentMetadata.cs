@@ -20,7 +20,7 @@ using Edustructures.SifWorks.Student;
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {
 
-    class StaffAssignmentMetadata : SifDataObjectMetadata<StaffAssignment>
+    public class StaffAssignmentMetadata : SifDataObjectMetadata<StaffAssignment>
     {
  
         public override ICollection<DependentObject> DependentObjects

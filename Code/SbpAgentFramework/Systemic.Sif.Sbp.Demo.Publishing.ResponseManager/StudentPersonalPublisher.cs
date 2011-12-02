@@ -47,7 +47,8 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
                 // StudentPersonal has only a single primary key.
                 if (conditions.Size() == 1)
                 {
-                    Condition condition = conditions.HasCondition("@RefId");
+                    Condition condition = conditions.HasCondition(StudentDTD.STUDENTPERSONAL_REFID);
+                    //Condition condition = conditions.HasCondition("@RefId");
 
                     if ((ComparisonOperators.EQ.Equals(condition.Operators)))
                     {
