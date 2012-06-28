@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
-using Edustructures.SifWorks.Student;
+using OpenADK.Library.au.Student;
 
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {

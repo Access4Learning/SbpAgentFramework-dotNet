@@ -16,8 +16,8 @@
 using System;
 using System.Collections.Generic;
 using System.Timers;
-using Edustructures.SifWorks;
-using Edustructures.SifWorks.Tools.Cfg;
+using OpenADK.Library;
+using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Model;
 using Systemic.Sif.Sbp.Framework.Model;
 using Systemic.Sif.Sbp.Framework.Model.Metadata;

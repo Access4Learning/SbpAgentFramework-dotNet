@@ -16,7 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Edustructures.SifWorks;
+using OpenADK.Library;
 
 namespace Systemic.Sif.Sbp.Framework.Model.Metadata
 {

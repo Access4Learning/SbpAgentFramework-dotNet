@@ -13,8 +13,8 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
-using Edustructures.SifWorks.Learning;
-using Edustructures.SifWorks.Tools.Cfg;
+using OpenADK.Library.au.Learning;
+using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Sbp.Framework.Model.Metadata;
 
 namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline

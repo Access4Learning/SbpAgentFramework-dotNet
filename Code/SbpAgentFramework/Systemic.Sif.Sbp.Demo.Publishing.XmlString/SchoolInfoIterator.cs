@@ -13,8 +13,8 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
-using Edustructures.SifWorks;
-using Edustructures.SifWorks.School;
+using OpenADK.Library;
+using OpenADK.Library.au.School;
 using Systemic.Sif.Framework.Model;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.XmlString

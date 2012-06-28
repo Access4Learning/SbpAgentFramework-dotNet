@@ -13,9 +13,9 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
-using Edustructures.SifWorks;
-using Edustructures.SifWorks.School;
-using Edustructures.SifWorks.Tools.Cfg;
+using OpenADK.Library;
+using OpenADK.Library.au.School;
+using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.XmlString

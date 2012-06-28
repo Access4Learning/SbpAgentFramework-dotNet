@@ -14,9 +14,9 @@
 */
 
 using System;
-using Edustructures.SifWorks;
-using Edustructures.SifWorks.Student;
-using Edustructures.SifWorks.Tools.Cfg;
+using OpenADK.Library;
+using OpenADK.Library.au.Student;
+using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
