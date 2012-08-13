@@ -64,6 +64,7 @@
     <Compile Include="Agent\SubscribingAgent.cs" />
     <Compile Include="Model\CachedObject.cs" />
     <Compile Include="Model\DependentObject.cs" />
+    <Compile Include="Model\Metadata\IdentityMetadata.cs" />
     <Compile Include="Model\Metadata\SchoolInfoMetadata.cs" />
     <Compile Include="Model\Metadata\SifDataObjectMetadata.cs" />
     <Compile Include="Model\Metadata\SifRefIdMetadata.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Persistence\NHibernate\ObjectZoneSyncDao.cs" />
     <Compile Include="Persistence\PersistenceException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publisher\Baseline\IdentityPublisher.cs" />
     <Compile Include="Publisher\Baseline\SchoolInfoPublisher.cs" />
     <Compile Include="Publisher\Baseline\StaffAssignmentPublisher.cs" />
     <Compile Include="Publisher\Baseline\StaffPersonalPublisher.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Service\IDependentObjectCacheService.cs" />
     <Compile Include="Service\ISyncService.cs" />
     <Compile Include="Service\SyncService.cs" />
+    <Compile Include="Subscriber\Baseline\IdentitySubscriber.cs" />
     <Compile Include="Subscriber\Baseline\SchoolInfoSubscriber.cs" />
     <Compile Include="Subscriber\Baseline\StaffAssignmentSubscriber.cs" />
     <Compile Include="Subscriber\Baseline\StaffPersonalSubscriber.cs" />

@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GenericIterator.cs" />
+    <Compile Include="IdentityIterator.cs" />
+    <Compile Include="IdentityPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishingAgent.cs" />
     <Compile Include="SchoolInfoIterator.cs" />

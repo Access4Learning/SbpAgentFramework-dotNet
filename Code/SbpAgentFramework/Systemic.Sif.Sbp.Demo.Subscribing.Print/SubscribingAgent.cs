@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2012 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -41,9 +41,20 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <summary>
+        /// Return the Subscribers instantiated for this Agent.
+        /// </summary>
+        /// <returns>Subscribers instantiated for this Agent.</returns>
         public override IList<IBaseSubscriber> GetSubscribers()
         {
             IList<IBaseSubscriber> subscribers = new List<IBaseSubscriber>();
+            IdentitySubscriber identitySubscriber = new IdentitySubscriber(AgentConfiguration);
+            identitySubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
+            subscribers.Add(identitySubscriber);
             StudentPersonalSubscriber studentPersonalSubscriber = new StudentPersonalSubscriber(AgentConfiguration);
             studentPersonalSubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
             subscribers.Add(studentPersonalSubscriber);
