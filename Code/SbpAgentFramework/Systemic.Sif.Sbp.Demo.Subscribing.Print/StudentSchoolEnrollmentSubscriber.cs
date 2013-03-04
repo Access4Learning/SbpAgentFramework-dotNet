@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,67 +15,60 @@
 
 using OpenADK.Library;
 using OpenADK.Library.au.Student;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Model;
+using Systemic.Sif.Sbp.Framework.Model.Metadata;
 
 namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
 {
 
+    /// <summary>
+    /// Subscriber of StudentSchoolEnrollment SIF Data Objects.
+    /// </summary>
     class StudentSchoolEnrollmentSubscriber : Systemic.Sif.Sbp.Framework.Subscriber.Baseline.StudentSchoolEnrollmentSubscriber
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private AgentProperties agentProperties;
-
-        protected override int CacheCheckFrequency
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.checkFrequency", 3600000); }
-            set { }
-        }
-
-        protected override int ExpiryPeriod
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryPeriod", 7200000); }
-            set { }
-        }
-
-        protected override string ExpiryStrategy
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryStrategy", "REQUEST"); }
-            set { }
-        }
-
-        public StudentSchoolEnrollmentSubscriber(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
-
+        /// <summary>
+        /// Process an event for the StudentSchoolEnrollment SIF Object.
+        /// </summary>
+        /// <param name="sifEvent">StudentSchoolEnrollment event received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessEvent(SifEvent<StudentSchoolEnrollment> sifEvent, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifEvent.SifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for StudentSchoolEnrollment in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for StudentSchoolEnrollment in Zone " + zone.ZoneId + ":\n" + sifEvent.SifDataObject.ToXml());
         }
 
+        /// <summary>
+        /// Process a response (of a request) for an StudentSchoolEnrollment SIF Object.
+        /// </summary>
+        /// <param name="sifDataObject">StudentSchoolEnrollment response received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessResponse(StudentSchoolEnrollment sifDataObject, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a request response for StudentSchoolEnrollment in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a request response for StudentSchoolEnrollment in Zone " + zone.ZoneId + ":\n" + sifDataObject.ToXml());
         }
 
+        /// <summary>
+        /// Determine whether a dependent object of the Identity SIF Object already exists in the target system.
+        /// </summary>
+        /// <param name="dependentObjectName">SIF type of the dependent object.</param>
+        /// <param name="objectKeyValue">SIF RefId for the dependent object.</param>
+        /// <returns></returns>
         protected override bool DoesObjectExistInTargetSystem(string dependentObjectName, string objectKeyValue)
         {
             bool exists = false;
+            SifRefIdMetadata sifRefIdMetadata = new SifRefIdMetadata(objectKeyValue);
 
-            if ("SchoolInfo".Equals(dependentObjectName) && "@RefId=D3E34B359D75101A8C3D00AA001A1652".Equals(objectKeyValue))
+            if ("StudentPersonal".Equals(dependentObjectName) && StudentPersonalSubscriber.receivedSifRefIds.Contains(sifRefIdMetadata.Value))
             {
-                exists = false;
+                if (log.IsDebugEnabled) log.Debug("StudentPersonal with a SifRefId of " + sifRefIdMetadata.Value + " exists in the target system.");
+                exists = true;
             }
-            else if ("StudentPersonal".Equals(dependentObjectName) && "@RefId=7C834EA9EDA12090347F83297E1C290C".Equals(objectKeyValue))
+            else if ("SchoolInfo".Equals(dependentObjectName) && SchoolInfoSubscriber.receivedSifRefIds.Contains(sifRefIdMetadata.Value))
             {
-                exists = false;
+                if (log.IsDebugEnabled) log.Debug("SchoolInfo with a SifRefId of " + sifRefIdMetadata.Value + " exists in the target system.");
+                exists = true;
             }
 
             return exists;

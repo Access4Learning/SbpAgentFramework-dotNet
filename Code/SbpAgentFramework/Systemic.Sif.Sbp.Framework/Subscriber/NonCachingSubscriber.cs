@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,11 +32,19 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
     public abstract class NonCachingSubscriber<T> : SyncSubscriber<T> where T : SifDataObject, new()
     {
 
+        /// <summary>
+        /// Create an instance of the Subscriber without referencing the Agent configuration settings.
+        /// </summary>
         public NonCachingSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// Create an instance of the Subscriber based upon the Agent configuration settings.
+        /// </summary>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public NonCachingSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {

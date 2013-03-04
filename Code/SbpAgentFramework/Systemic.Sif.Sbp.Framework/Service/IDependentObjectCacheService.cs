@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ using Systemic.Sif.Sbp.Framework.Model;
 namespace Systemic.Sif.Sbp.Framework.Service
 {
 
+    /// <summary>
+    /// This interface specifies operations used by the Dependent Object Cache (DOC).
+    /// </summary>
     public interface IDependentObjectCacheService
     {
 
@@ -36,6 +39,12 @@ namespace Systemic.Sif.Sbp.Framework.Service
         /// <exception cref="System.ArgumentNullException">cachedObject parameter is null.</exception>
         void DeleteDependentObject(DependentObject dependentObject);
 
+        /// <summary>
+        /// Mark the DependentObject in the cache has already requested.
+        /// </summary>
+        /// <param name="dependentObject">The DependentObject to mark.</param>
+        /// <param name="agentId">Agent associated with the dependent object.</param>
+        /// <param name="zoneId">Zone associated with the dependent object.</param>
         void MarkAsRequested(DependentObject dependentObject, string agentId, string zoneId);
 
         /// <summary>

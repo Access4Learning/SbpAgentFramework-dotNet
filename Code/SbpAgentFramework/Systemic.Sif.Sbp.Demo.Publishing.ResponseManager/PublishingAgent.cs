@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,11 +15,15 @@
 
 using System;
 using System.Collections.Generic;
+using OpenADK.Library;
 using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 {
 
+    /// <summary>
+    /// This SIF Agent provides an example implementation of a publishing Agent from the SBP Agent Framework.
+    /// </summary>
     class PublishingAgent : Systemic.Sif.Sbp.Framework.Agent.PublishingAgent
     {
         // Create a logger for use in this class.
@@ -40,18 +44,6 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
         public PublishingAgent(String cfgFileName)
             : base(cfgFileName)
         {
-        }
-
-        /// <summary>
-        /// Return the Publishers instantiated for this Agent.
-        /// </summary>
-        /// <returns>Publishers instantiated for this Agent.</returns>
-        public override IList<IBasePublisher> GetPublishers()
-        {
-            IList<IBasePublisher> publishers = new List<IBasePublisher>();
-            publishers.Add(new IdentityPublisher(AgentConfiguration));
-            publishers.Add(new StudentPersonalPublisher(AgentConfiguration));
-            return publishers;
         }
 
         /// <summary>

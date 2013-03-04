@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,33 +27,47 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 {
 
     /// <summary>
-    /// This class implements some of the functionality defined in the SIF Baseline Profile (SBP). They are all
-    /// infrastructure level functions and include: start-up Sync Control through configuration defined in a database,
-    /// and a Dependent Object Cache (DOC).
-    /// Subscribers of SIF Data Objects that are defined as part of the (SBP) should extend this class.
-    /// It will not be possible for a Subscriber of SIF Data Objects that are NOT defined the the SBP to extend this
-    /// class. The NonCachingSubscriber should be used in this case.
+    /// This class implements some of the functionality defined in the SIF Baseline Profile (SBP). This includes
+    /// infrastructure level functions such as management of synchronisation requests and the Dependent Object Cache
+    /// (DOC).
+    /// Subscribers of SIF Data Objects which do not have dependent objects (e.g. StudentPersonal, SchoolInfo) and are
+    /// defined as part of the SBP should extend this class.
+    /// Subscribers of SIF Data Objects that are not defined as part of the SBP should extend the NonCachingSubscriber.
     /// </summary>
-    /// <typeparam name="T">The type of SIF Data Object this Subscriber processes (other than those defined in the SBP).</typeparam>
+    /// <typeparam name="T">The type of SIF Data Object this Subscriber processes.</typeparam>
     public abstract class WithoutDependentsCachingSubscriber<T> : CachingSubscriber<T> where T : SifDataObject, new()
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        IDependentObjectCacheService cacheService;
+        private IDependentObjectCacheService cacheService = new DependentObjectCacheService();
 
+        /// <summary>
+        /// Create an instance of the Subscriber without referencing the Agent configuration settings.
+        /// </summary>
         public WithoutDependentsCachingSubscriber()
             : base()
         {
-            cacheService = new DependentObjectCacheService();
         }
 
+        /// <summary>
+        /// Create an instance of the Subscriber based upon the Agent configuration settings.
+        /// </summary>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public WithoutDependentsCachingSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
-            cacheService = new DependentObjectCacheService();
         }
 
+        /// <summary>
+        /// This method will check whether the specified sifDataObject exists as a dependent object in the cache. If
+        /// it does, it is no longer required and can be removed.
+        /// </summary>
+        /// <param name="sifDataObject">SIF Data Object to check against the cache.</param>
+        /// <param name="zone">Zone the SIF Data Object was received from.</param>
+        /// <returns>This method will always return true.</returns>
+        /// <exception cref="System.ArgumentException">sifDataObject or zone parameter is null.</exception>
         private bool PreProcessSifDataObject(T sifDataObject, IZone zone)
         {
 
@@ -75,7 +89,7 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
             // removed.
             if (dependentObject != null)
             {
-                if (log.IsDebugEnabled) log.Debug(metadata.ObjectName + " (" + metadata.SifUniqueId + ") removed from the cache as it has now been received.");
+                if (log.IsInfoEnabled) log.Info(metadata.ObjectName + " (" + metadata.SifUniqueId + ") removed from the cache as it has now been received.");
                 cacheService.DeleteDependentObject(dependentObject);
             }
             else
@@ -86,6 +100,12 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
             return true;
         }
 
+        /// <summary>
+        /// This method will perform pre-processing of the received event.
+        /// </summary>
+        /// <param name="sifEvent">SIF Event received.</param>
+        /// <param name="zone">Zone that the SIF Event was received from.</param>
+        /// <returns>True if the event needs to be processed further; false otherwise.</returns>
         protected override bool PreProcessEvent(SifEvent<T> sifEvent, IZone zone)
         {
 
@@ -96,20 +116,43 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
             bool processFurther = true;
 
-            // The cache does not manage Undefined or Delete events.
-            if (EventAction.Add.Equals(sifEvent.EventAction) || EventAction.Change.Equals(sifEvent.EventAction))
+            if (CacheEnabled)
             {
-                processFurther = PreProcessSifDataObject(sifEvent.SifDataObject, zone);
+
+                // The cache does not manage Undefined or Delete events.
+                if (EventAction.Add.Equals(sifEvent.EventAction) || EventAction.Change.Equals(sifEvent.EventAction))
+                {
+                    processFurther = PreProcessSifDataObject(sifEvent.SifDataObject, zone);
+                }
+
             }
 
             return processFurther;
         }
 
+        /// <summary>
+        /// This method will perform pre-processing of the received SIF Data Object.
+        /// </summary>
+        /// <param name="sifDataObject">SIF Data Object received.</param>
+        /// <param name="zone">Zone that the SIF Data Object was received from.</param>
+        /// <returns>True if the SIF Data Object needs to be processed further; false otherwise.</returns>
         protected override bool PreProcessResponse(T sifDataObject, IZone zone)
         {
-            return PreProcessSifDataObject(sifDataObject, zone);
+            bool processFurther = true;
+
+            if (CacheEnabled)
+            {
+                processFurther = PreProcessSifDataObject(sifDataObject, zone);
+            }
+
+            return processFurther;
         }
 
+        /// <summary>
+        /// This method will check the cache for dependent objects that have yet to be received and make a SIF
+        /// Request them.
+        /// </summary>
+        /// <param name="zones">Zones that the SIF Request need to be made on.</param>
         private void RequestDependentObjects(IZone[] zones)
         {
 
@@ -140,12 +183,17 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
         }
 
+        /// <summary>
+        /// This method will start a thread for requesting missing dependent objects.
+        /// </summary>
+        /// <param name="zones">Zones that the request need to be made on.</param>
         public override void StartRequestProcessing(IZone[] zones)
         {
             base.StartRequestProcessing(zones);
+            if (log.IsDebugEnabled) log.Debug("Caching has been " + (CacheEnabled ? "enabled" : "disabled") + " for Subscriber " + this.GetType().Name + ".");
 
             // Create a timer with an appropriate interval.
-            if (CacheCheckFrequency > 0)
+            if (CacheEnabled && CacheCheckFrequency > 0)
             {
                 if (log.IsDebugEnabled) log.Debug(this.GetType().Name + " started requesting dependent objects (interval is " + CacheCheckFrequency + " milliseconds)...");
                 Timer timer = new Timer(CacheCheckFrequency);

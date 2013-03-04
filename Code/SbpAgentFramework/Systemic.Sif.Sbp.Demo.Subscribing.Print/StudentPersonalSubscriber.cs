@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,56 +13,59 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
+using System.Collections.Generic;
 using OpenADK.Library;
 using OpenADK.Library.au.Student;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Model;
 
 namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
 {
 
+    /// <summary>
+    /// Subscriber of StudentPersonal SIF Data Objects.
+    /// </summary>
     class StudentPersonalSubscriber : Systemic.Sif.Sbp.Framework.Subscriber.Baseline.StudentPersonalSubscriber
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private AgentProperties agentProperties;
+        public static IList<string> receivedSifRefIds = new List<string>();
 
-        protected override int CacheCheckFrequency
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.checkFrequency", 3600000); }
-            set { }
-        }
-
-        protected override int RequestFrequency
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".requestFrequency", 0); }
-            set {  }
-        }
-
-        public StudentPersonalSubscriber(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
-
+        /// <summary>
+        /// Filter the SIF Request to a student whose SIF RefId is 7C834EA9EDA12090347F83297E1C290C.
+        /// </summary>
+        /// <param name="query">SIF Query that contains the filter condition.</param>
+        /// <param name="zone">Zone to make the SIF Request on.</param>
         protected override void AddToBroadcastRequestQuery(Query query, IZone zone)
         {
             if (log.IsDebugEnabled) log.Debug("Added a condition to the request query for StudentPersonal SIF RefId of 7C834EA9EDA12090347F83297E1C290C.");
             query.AddCondition(StudentDTD.STUDENTPERSONAL_REFID, ComparisonOperators.EQ, "7C834EA9EDA12090347F83297E1C290C");
         }
 
+        /// <summary>
+        /// Process an event for the StudentPersonal SIF Object.
+        /// </summary>
+        /// <param name="sifEvent">StudentPersonal event received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessEvent(SifEvent<StudentPersonal> sifEvent, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifEvent.SifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for StudentPersonal in Zone " + zone.ZoneId + ".");
+            
+            if (!receivedSifRefIds.Contains(sifEvent.SifDataObject.RefId))
+            {
+                receivedSifRefIds.Add(sifEvent.SifDataObject.RefId);
+            }
+
+            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for StudentPersonal in Zone " + zone.ZoneId + " with a SifRefId of " + sifEvent.SifDataObject.RefId + ":\n" + sifEvent.SifDataObject.ToXml());
         }
 
+        /// <summary>
+        /// Process a response (of a request) for an StudentPersonal SIF Object.
+        /// </summary>
+        /// <param name="sifDataObject">StudentPersonal response received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessResponse(StudentPersonal sifDataObject, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a request response for StudentPersonal in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a request response for StudentPersonal in Zone " + zone.ZoneId + ":\n" + sifDataObject.ToXml());
         }
 
     }

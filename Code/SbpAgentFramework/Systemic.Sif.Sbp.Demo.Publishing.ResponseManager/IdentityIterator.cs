@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2012-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 using OpenADK.Library;
 using OpenADK.Library.au.Infrastructure;
 using Systemic.Sif.Framework.Model;
+using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 {
@@ -23,15 +24,15 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
     /// <summary>
     /// Class used to retrieve Identity SIF Objects.
     /// </summary>
-    class IdentityIterator : GenericIterator<Identity>
+    class IdentityIterator : ISifEventIterator<Identity>, ISifResponseIterator<Identity>
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static int eventMessageCount = 0;
-        private static int responseMessageCount = 0;
 
         bool onceOnly = true;
+        private int responseMessageCount = 0;
         private SifParser sifParser = SifParser.NewInstance();
         private string[] messages = new string[]
         {
@@ -49,23 +50,90 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
         };
 
         /// <summary>
-        /// Retrieve the next change event for an Identity SIF Object.
+        /// No implementation.
         /// </summary>
-        /// <returns>Change event for an Identity SIF Object.</returns>
-        public override SifEvent<Identity> GetNextEvent()
+        public void AfterEvent()
         {
-            Identity identity = (Identity)sifParser.Parse(messages[eventMessageCount]);
-            eventMessageCount++;
-            if (log.IsDebugEnabled) log.Debug("IdentityIterator data " + identity.ToXml() + ".");
-            SifEvent<Identity> sifEvent = new SifEvent<Identity>(identity, EventAction.Change);
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void AfterResponse()
+        {
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void BeforeEvent()
+        {
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void BeforeResponse()
+        {
+        }
+
+        /// <summary>
+        /// Simply return the Identity from the XML string representation.
+        /// </summary>
+        /// <returns>The next SIF Event; null if there are parsing errors with the message.</returns>
+        public SifEvent<Identity> GetNextEvent()
+        {
+            SifEvent<Identity> sifEvent = null;
+
+            try
+            {
+                Identity identity = (Identity)sifParser.Parse(messages[eventMessageCount]);
+                if (log.IsDebugEnabled) log.Debug("Next Identity event record:\n" + identity.ToXml());
+                sifEvent = new SifEvent<Identity>(identity, EventAction.Change);
+            }
+            catch (AdkParsingException e)
+            {
+                if (log.IsWarnEnabled) log.Warn("The following event message from IdentityIterator has been ignored due to parsing errors: " + messages[eventMessageCount] + ".", e);
+            }
+            finally
+            {
+                eventMessageCount++;
+            }
+
             return sifEvent;
         }
 
         /// <summary>
-        /// Check if there is another change event for an Identity SIF Object.
+        /// Simply return the Identity from the XML string representation.
         /// </summary>
-        /// <returns>True if there is another event; false otherwise.</returns>
-        public override bool HasNextEvent()
+        /// <returns>The next response; null if there are parsing errors with the message.</returns>
+        public Identity GetNextResponse()
+        {
+            Identity identity = null;
+
+            try
+            {
+                identity = (Identity)sifParser.Parse(messages[responseMessageCount]);
+                if (log.IsDebugEnabled) log.Debug("Next Identity response record:\n" + identity.ToXml());
+            }
+            catch (AdkParsingException e)
+            {
+                if (log.IsWarnEnabled) log.Warn("The following response message from IdentityIterator has been ignored due to parsing errors: " + messages[eventMessageCount] + ".", e);
+            }
+            finally
+            {
+                responseMessageCount++;
+            }
+
+            return identity;
+        }
+
+        /// <summary>
+        /// If the onceOnly flag is True, then return True for each message defined in the message list.
+        /// If the onceOnly flag is False, then always return True.
+        /// </summary>
+        /// <returns>True if there are further events; false otherwise.</returns>
+        public bool HasNextEvent()
         {
             bool hasNext = (eventMessageCount < messages.Length);
 
@@ -78,30 +146,12 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
         }
 
         /// <summary>
-        /// Retrieve the next response (of a request) for an Identity SIF Object.
+        /// This method will return True for each message defined in the message list.
         /// </summary>
-        /// <returns>Response for an Identity SIF Object.</returns>
-        public override Identity GetNextResponse()
+        /// <returns>True if there are further responses; false otherwise.</returns>
+        public bool HasNextResponse()
         {
-            Identity identity = (Identity)sifParser.Parse(messages[responseMessageCount++]);
-            responseMessageCount++;
-            return identity;
-        }
-
-        /// <summary>
-        /// Check if there is another response for an Identity SIF Object.
-        /// </summary>
-        /// <returns>True if there is another response; false otherwise.</returns>
-        public override bool HasNextResponse()
-        {
-            bool hasNext = (responseMessageCount < messages.Length);
-
-            if (!onceOnly && !hasNext)
-            {
-                responseMessageCount = 0;
-            }
-
-            return hasNext;
+            return responseMessageCount < messages.Length;
         }
 
     }

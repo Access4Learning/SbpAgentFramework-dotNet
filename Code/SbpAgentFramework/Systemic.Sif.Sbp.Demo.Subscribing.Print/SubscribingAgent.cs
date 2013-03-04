@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2012-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using OpenADK.Library;
 using Systemic.Sif.Framework.Subscriber;
 
 namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
@@ -39,32 +40,6 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
         public SubscribingAgent(String cfgFileName)
             : base(cfgFileName)
         {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <summary>
-        /// Return the Subscribers instantiated for this Agent.
-        /// </summary>
-        /// <returns>Subscribers instantiated for this Agent.</returns>
-        public override IList<IBaseSubscriber> GetSubscribers()
-        {
-            IList<IBaseSubscriber> subscribers = new List<IBaseSubscriber>();
-            IdentitySubscriber identitySubscriber = new IdentitySubscriber(AgentConfiguration);
-            identitySubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
-            subscribers.Add(identitySubscriber);
-            StudentPersonalSubscriber studentPersonalSubscriber = new StudentPersonalSubscriber(AgentConfiguration);
-            studentPersonalSubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
-            subscribers.Add(studentPersonalSubscriber);
-            SchoolInfoSubscriber schoolInfoSubscriber = new SchoolInfoSubscriber(AgentConfiguration);
-            schoolInfoSubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
-            subscribers.Add(schoolInfoSubscriber);
-            StudentSchoolEnrollmentSubscriber studentSchoolEnrollmentSubscriber = new StudentSchoolEnrollmentSubscriber(AgentConfiguration);
-            studentSchoolEnrollmentSubscriber.ApplicationId = Properties.GetProperty("agent.applicationId", "defaultId");
-            subscribers.Add(studentSchoolEnrollmentSubscriber);
-            return subscribers;
         }
 
         /// <summary>

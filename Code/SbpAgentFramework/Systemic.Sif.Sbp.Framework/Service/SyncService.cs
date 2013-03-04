@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,22 +21,32 @@ using Systemic.Sif.Sbp.Framework.Persistence.NHibernate;
 namespace Systemic.Sif.Sbp.Framework.Service
 {
 
+    /// <summary>
+    /// This class contains operations used by the synchronisation functionality.
+    /// </summary>
     public class SyncService : ISyncService
     {
+        private static readonly Object locker = new Object();
+
         private IObjectZoneSyncDao objectZoneSyncDao = new ObjectZoneSyncDao();
 
         /// <see cref="Systemic.Sif.Sbp.Framework.Service.ISyncService.MarkAsSynced(string, string, string)">MarkAsSynced</see>
         public void MarkAsSynced(string sifObjectName, string agentId, string zoneId)
         {
-            ObjectZoneSync objectZoneSync = objectZoneSyncDao.Retrieve(sifObjectName, agentId, zoneId);
 
-            if (objectZoneSync == null)
+            lock (locker)
             {
-                objectZoneSync = new ObjectZoneSync { SifObjectName = sifObjectName, ZoneId = zoneId, AgentId = agentId };
+                ObjectZoneSync objectZoneSync = objectZoneSyncDao.Retrieve(sifObjectName, agentId, zoneId);
+
+                if (objectZoneSync == null)
+                {
+                    objectZoneSync = new ObjectZoneSync { SifObjectName = sifObjectName, ZoneId = zoneId, AgentId = agentId };
+                }
+
+                objectZoneSync.LastRequested = DateTime.Now;
+                objectZoneSyncDao.Save(objectZoneSync);
             }
 
-            objectZoneSync.LastRequested = DateTime.Now;
-            objectZoneSyncDao.Save(objectZoneSync);
         }
 
         /// <see cref="Systemic.Sif.Sbp.Framework.Service.ISyncService.IsSyncRequired(string, string, string)">IsSyncRequired</see>

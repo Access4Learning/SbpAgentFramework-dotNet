@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,35 +27,53 @@ using Systemic.Sif.Sbp.Framework.Service;
 namespace Systemic.Sif.Sbp.Framework.Subscriber
 {
 
+    /// <summary>
+    /// This class implements some of the functionality defined in the SIF Baseline Profile (SBP). This includes
+    /// infrastructure level functions such as management of synchronisation requests and the Dependent Object Cache
+    /// (DOC).
+    /// Subscribers of SIF Data Objects which have dependent objects (e.g. Identity, TeachingGroup) and are defined as
+    /// part of the SBP should extend this class.
+    /// Subscribers of SIF Data Objects that are not defined as part of the SBP should extend the NonCachingSubscriber.
+    /// </summary>
+    /// <typeparam name="T">The type of SIF Data Object this Subscriber processes.</typeparam>
     public abstract class WithDependentsCachingSubscriber<T> : CachingSubscriber<T> where T : SifDataObject, new()
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        DependentObjectCacheService cacheService = new DependentObjectCacheService();
-        int expiryPeriod = 7200000;
-        string expiryStrategy = "REQUEST";
+        private AgentProperties agentProperties = new AgentProperties(null);
+        private IDependentObjectCacheService cacheService = new DependentObjectCacheService();
 
         protected virtual int ExpiryPeriod
         {
-            get { return expiryPeriod; }
-            set { expiryPeriod = value; }
+            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryPeriod", 7200000); }
+            set { }
         }
 
         protected virtual string ExpiryStrategy
         {
-            get { return expiryStrategy; }
-            set { expiryStrategy = value; }
+            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryStrategy", "REQUEST"); }
+            set { }
         }
 
+        /// <summary>
+        /// Create an instance of the Subscriber without referencing the Agent configuration settings.
+        /// </summary>
         public WithDependentsCachingSubscriber()
             : base()
         {
         }
 
+        /// <summary>
+        /// Create an instance of the Subscriber based upon the Agent configuration settings.
+        /// </summary>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public WithDependentsCachingSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
+            agentConfig.GetAgentProperties(agentProperties);
+            if (log.IsDebugEnabled) log.Debug("Subscriber " + this.GetType().Name + " has a cache expiry period of " + ExpiryPeriod + " and expiry strategy of " + ExpiryStrategy + ".");
         }
 
         /// <summary>
@@ -103,6 +121,18 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
         /// <returns>True if the dependent object exists; false otherwise.</returns>
         protected abstract bool DoesObjectExistInTargetSystem(string dependentObjectName, string objectKeyValue);
 
+        /// <summary>
+        /// This method will check the specified sifDataObject to see whether its dependent objects already exist in
+        /// the target system or in the cache. If all the dependent objects exist in the target system, then the
+        /// sifDataObject can be processed further (return true). If some dependent objects are have been cached, then
+        /// the sifDataObject will be cached awaiting all outstanding dependent objects, and this method will return
+        /// false.
+        /// </summary>
+        /// <param name="sifDataObject">SIF Data Object to check against the cache.</param>
+        /// <param name="eventAction">The action associated with the SIF Data Object, i.e. add, change.</param>
+        /// <param name="zone">Zone the SIF Data Object was received from.</param>
+        /// <returns>True if all dependent objects exist in the target system; false otherwise.</returns>
+        /// <exception cref="System.ArgumentException">sifDataObject or zone parameter is null.</exception>
         private bool PreProcessSifDataObject(T sifDataObject, EventAction? eventAction, IZone zone)
         {
 
@@ -195,6 +225,12 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
             return processFurther;
         }
 
+        /// <summary>
+        /// This method will perform pre-processing of the received event.
+        /// </summary>
+        /// <param name="sifEvent">SIF Event received.</param>
+        /// <param name="zone">Zone that the SIF Event was received from.</param>
+        /// <returns>True if the event needs to be processed further; false otherwise.</returns>
         protected override bool PreProcessEvent(SifEvent<T> sifEvent, IZone zone)
         {
 
@@ -205,31 +241,58 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
             bool processFurther = true;
 
-            // The cache does not manage Undefined or Delete events.
-            if (EventAction.Add.Equals(sifEvent.EventAction) || EventAction.Change.Equals(sifEvent.EventAction))
+            if (CacheEnabled)
             {
-                processFurther = PreProcessSifDataObject(sifEvent.SifDataObject, sifEvent.EventAction, zone);
+
+                // The cache does not manage Undefined or Delete events.
+                if (EventAction.Add.Equals(sifEvent.EventAction) || EventAction.Change.Equals(sifEvent.EventAction))
+                {
+                    processFurther = PreProcessSifDataObject(sifEvent.SifDataObject, sifEvent.EventAction, zone);
+                }
+
             }
 
             return processFurther;
         }
 
+        /// <summary>
+        /// This method will perform pre-processing of the received SIF Data Object.
+        /// </summary>
+        /// <param name="sifDataObject">SIF Data Object received.</param>
+        /// <param name="zone">Zone that the SIF Data Object was received from.</param>
+        /// <returns>True if the SIF Data Object needs to be processed further; false otherwise.</returns>
         protected override bool PreProcessResponse(T sifDataObject, IZone zone)
         {
-            return PreProcessSifDataObject(sifDataObject, null, zone);
+            bool processFurther = true;
+
+            if (CacheEnabled)
+            {
+                processFurther = PreProcessSifDataObject(sifDataObject, null, zone);
+            }
+
+            return processFurther;
         }
 
+        /// <summary>
+        /// This method will process all cached objects that have expired (based upon expiry period and strategy).
+        /// </summary>
         private void ProcessExpiredObjects()
         {
             cacheService.UpdateExpiredObjects(ApplicationId, AgentConfiguration.SourceId, ExpiryStrategy, ExpiryPeriod);
         }
 
+        /// <summary>
+        /// This method will check the cache for cached objects whose dependent objects have been received, and
+        /// process them accordingly.
+        /// </summary>
+        /// <param name="zones">Zones that the cached objects will be processed against.</param>
         private void ProcessObjectsWithoutDependents(IZone[] zones)
         {
             ICollection<CachedObject> cachedObjects = cacheService.RetrieveByNoDependencies(SifObjectType.Name, ApplicationId, AgentConfiguration.SourceId);
             if (log.IsDebugEnabled) log.Debug(this.GetType().Name + " found " + cachedObjects.Count + " objects with no dependencies for application " + ApplicationId + " and Agent " + AgentConfiguration.SourceId + ".");
             IDictionary<string, IZone> zonesMap = new Dictionary<string, IZone>();
 
+            // Create an indexed list of Zones for easy access.
             foreach (IZone zone in zones)
             {
                 zonesMap.Add(zone.ZoneId, zone);
@@ -267,12 +330,18 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
         }
 
+        /// <summary>
+        /// This method will start a thread for processing cached objects with no dependencies and cached objects that
+        /// have expired.
+        /// </summary>
+        /// <param name="zones">Zones that the cached objects will be processed against.</param>
         public override void StartRequestProcessing(IZone[] zones)
         {
             base.StartRequestProcessing(zones);
+            if (log.IsDebugEnabled) log.Debug("Caching has been " + (CacheEnabled ? "enabled" : "disabled") + " for Subscriber " + this.GetType().Name + ".");
 
             // Create a timer with an appropriate interval.
-            if (CacheCheckFrequency > 0)
+            if (CacheEnabled && CacheCheckFrequency > 0)
             {
                 if (log.IsDebugEnabled) log.Debug(this.GetType().Name + " started processing of expired objects and objects without dependents (interval is " + CacheCheckFrequency + " milliseconds)...");
                 Timer timer = new Timer(CacheCheckFrequency);

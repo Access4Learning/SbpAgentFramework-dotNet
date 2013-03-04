@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,19 +17,20 @@ using System.Collections.Generic;
 using OpenADK.Library;
 using OpenADK.Library.au.Student;
 using Systemic.Sif.Framework.Model;
+using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 {
 
-    class StudentPersonalIterator : GenericIterator<StudentPersonal>
+    class StudentPersonalIterator : ISifEventIterator<StudentPersonal>, ISifResponseIterator<StudentPersonal>
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static int eventMessageCount = 0;
-        private static int responseMessageCount = 0;
 
-        bool onceOnly = true;
+        private bool onceOnly = true;
+        private int responseMessageCount = 0;
         private SifParser sifParser = SifParser.NewInstance();
         private IList<string> eventMessages = new List<string>();
         private IList<string> responseMessages = new List<string>();
@@ -67,6 +68,10 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
             }
         };
 
+        /// <summary>
+        /// Create an instance of this class. Build up the appropriate list of event and response messages.
+        /// </summary>
+        /// <param name="key">SIF RefId of a specific StudentPersonal message to be returned as a response.</param>
         public StudentPersonalIterator(string key)
         {
 
@@ -97,16 +102,91 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 
         }
 
-        public override SifEvent<StudentPersonal> GetNextEvent()
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void AfterEvent()
         {
-            StudentPersonal studentPersonal = (StudentPersonal)sifParser.Parse(eventMessages[eventMessageCount]);
-            eventMessageCount++;
-            if (log.IsDebugEnabled) log.Debug("StudentPersonalIterator event data " + studentPersonal.ToXml() + ".");
-            SifEvent<StudentPersonal> sifEvent = new SifEvent<StudentPersonal>(studentPersonal, EventAction.Change);
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void AfterResponse()
+        {
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void BeforeEvent()
+        {
+        }
+
+        /// <summary>
+        /// No implementation.
+        /// </summary>
+        public void BeforeResponse()
+        {
+        }
+
+        /// <summary>
+        /// Simply return the StudentPersonal from the XML string representation.
+        /// </summary>
+        /// <returns>The next SIF Event; null if there are parsing errors with the message.</returns>
+        public SifEvent<StudentPersonal> GetNextEvent()
+        {
+            SifEvent<StudentPersonal> sifEvent = null;
+
+            try
+            {
+                StudentPersonal studentPersonal = (StudentPersonal)sifParser.Parse(eventMessages[eventMessageCount]);
+                if (log.IsDebugEnabled) log.Debug("Next StudentPersonal event record:\n" + studentPersonal.ToXml());
+                sifEvent = new SifEvent<StudentPersonal>(studentPersonal, EventAction.Change);
+            }
+            catch (AdkParsingException e)
+            {
+                if (log.IsWarnEnabled) log.Warn("The following event message from StudentPersonalIterator has been ignored due to parsing errors: " + eventMessages[eventMessageCount] + ".", e);
+            }
+            finally
+            {
+                eventMessageCount++;
+            }
+
             return sifEvent;
         }
 
-        public override bool HasNextEvent()
+        /// <summary>
+        /// Simply return the StudentPersonal from the XML string representation.
+        /// </summary>
+        /// <returns>The next response; null if there are parsing errors with the message.</returns>
+        public StudentPersonal GetNextResponse()
+        {
+            StudentPersonal studentPersonal = null;
+
+            try
+            {
+                studentPersonal = (StudentPersonal)sifParser.Parse(responseMessages[responseMessageCount]);
+                if (log.IsDebugEnabled) log.Debug("Next StudentPersonal response record:\n" + studentPersonal.ToXml());
+            }
+            catch (AdkParsingException e)
+            {
+                if (log.IsWarnEnabled) log.Warn("The following response message from StudentPersonalIterator has been ignored due to parsing errors: " + responseMessages[eventMessageCount] + ".", e);
+            }
+            finally
+            {
+                responseMessageCount++;
+            }
+
+            return studentPersonal;
+        }
+
+        /// <summary>
+        /// If the onceOnly flag is True, then return True for each message defined in the message list.
+        /// If the onceOnly flag is False, then always return True.
+        /// </summary>
+        /// <returns>True if there are further events; false otherwise.</returns>
+        public bool HasNextEvent()
         {
             bool hasNext = (eventMessageCount < eventMessages.Count);
 
@@ -118,24 +198,13 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
             return hasNext;
         }
 
-        public override StudentPersonal GetNextResponse()
+        /// <summary>
+        /// This method will return True for each message defined in the message list.
+        /// </summary>
+        /// <returns>True if there are further responses; false otherwise.</returns>
+        public bool HasNextResponse()
         {
-            StudentPersonal studentPersonal = (StudentPersonal)sifParser.Parse(responseMessages[responseMessageCount]);
-            if (log.IsDebugEnabled) log.Debug("StudentPersonalIterator response data " + studentPersonal.ToXml() + ".");
-            responseMessageCount++;
-            return studentPersonal;
-        }
-
-        public override bool HasNextResponse()
-        {
-            bool hasNext = (responseMessageCount < responseMessages.Count);
-
-            if (!onceOnly && !hasNext)
-            {
-                responseMessageCount = 0;
-            }
-
-            return hasNext;
+            return responseMessageCount < responseMessages.Count;
         }
 
     }

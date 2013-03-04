@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2012-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,50 +15,19 @@
 
 using OpenADK.Library;
 using OpenADK.Library.au.Infrastructure;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Model;
+using Systemic.Sif.Sbp.Framework.Model.Metadata;
 
 namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
 {
 
     /// <summary>
-    /// Subscriber of Identity SIF Objects.
+    /// Subscriber of Identity SIF Data Objects.
     /// </summary>
     class IdentitySubscriber : Systemic.Sif.Sbp.Framework.Subscriber.Baseline.IdentitySubscriber
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private AgentProperties agentProperties;
-
-        protected override int CacheCheckFrequency
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.checkFrequency", 3600000); }
-            set { }
-        }
-
-        protected override int ExpiryPeriod
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryPeriod", 7200000); }
-            set { }
-        }
-
-        protected override string ExpiryStrategy
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.expiryStrategy", "REQUEST"); }
-            set { }
-        }
-
-        /// <summary>
-        /// Create an instance of an IdentitySubscriber.
-        /// </summary>
-        /// <param name="agentConfig">SIF Agent configuration settings.</param>
-        public IdentitySubscriber(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
 
         /// <summary>
         /// Process an event for the Identity SIF Object.
@@ -67,8 +36,7 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
         /// <param name="zone">Zone used.</param>
         protected override void ProcessEvent(SifEvent<Identity> sifEvent, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifEvent.SifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for Identity in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for Identity in Zone " + zone.ZoneId + ":\n" + sifEvent.SifDataObject.ToXml());
         }
 
         /// <summary>
@@ -78,8 +46,7 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
         /// <param name="zone">Zone used.</param>
         protected override void ProcessResponse(Identity sifDataObject, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a request response for Identity in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a request response for Identity in Zone " + zone.ZoneId + ":\n" + sifDataObject.ToXml());
         }
 
         /// <summary>
@@ -90,11 +57,13 @@ namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
         /// <returns></returns>
         protected override bool DoesObjectExistInTargetSystem(string dependentObjectName, string objectKeyValue)
         {
-            bool exists = true;
+            bool exists = false;
+            SifRefIdMetadata sifRefIdMetadata = new SifRefIdMetadata(objectKeyValue);
 
-            if ("StudentPersonal".Equals(dependentObjectName) && "@RefId=7C834EA9EDA12090347F83297E1C290C".Equals(objectKeyValue))
+            if ("StudentPersonal".Equals(dependentObjectName) && StudentPersonalSubscriber.receivedSifRefIds.Contains(sifRefIdMetadata.Value))
             {
-                exists = false;
+                if (log.IsDebugEnabled) log.Debug("StudentPersonal with a SifRefId of " + sifRefIdMetadata.Value + " exists in the target system.");
+                exists = true;
             }
 
             return exists;

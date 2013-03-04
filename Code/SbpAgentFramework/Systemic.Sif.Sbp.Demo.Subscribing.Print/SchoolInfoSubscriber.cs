@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,44 +13,48 @@
 * See the License for the specific language governing permissions and limitations under the License.
 */
 
+using System.Collections.Generic;
 using OpenADK.Library;
 using OpenADK.Library.au.School;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Model;
 
 namespace Systemic.Sif.Sbp.Demo.Subscribing.Print
 {
 
+    /// <summary>
+    /// Subscriber of SchoolInfo SIF Data Objects.
+    /// </summary>
     class SchoolInfoSubscriber : Systemic.Sif.Sbp.Framework.Subscriber.Baseline.SchoolInfoSubscriber
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private AgentProperties agentProperties;
+        public static IList<string> receivedSifRefIds = new List<string>();
 
-        protected override int CacheCheckFrequency
-        {
-            get { return agentProperties.GetProperty("subscriber." + SifObjectType.Name + ".cache.checkFrequency", 3600000); }
-            set { }
-        }
-
-        public SchoolInfoSubscriber(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
-
+        /// <summary>
+        /// Process an event for the SchoolInfo SIF Object.
+        /// </summary>
+        /// <param name="sifEvent">SchoolInfo event received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessEvent(SifEvent<SchoolInfo> sifEvent, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifEvent.SifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for SchoolInfo in Zone " + zone.ZoneId + ".");
+
+            if (!receivedSifRefIds.Contains(sifEvent.SifDataObject.RefId))
+            {
+                receivedSifRefIds.Add(sifEvent.SifDataObject.RefId);
+            }
+
+            if (log.IsDebugEnabled) log.Debug("Received a " + sifEvent.EventAction.ToString() + " event for SchoolInfo in Zone " + zone.ZoneId + " with a SifRefId of " + sifEvent.SifDataObject.RefId + ":\n" + sifEvent.SifDataObject.ToXml());
         }
 
+        /// <summary>
+        /// Process a response (of a request) for an SchoolInfo SIF Object.
+        /// </summary>
+        /// <param name="sifDataObject">SchoolInfo response received.</param>
+        /// <param name="zone">Zone used.</param>
         protected override void ProcessResponse(SchoolInfo sifDataObject, IZone zone)
         {
-            if (log.IsDebugEnabled) log.Debug(sifDataObject.ToXml());
-            if (log.IsDebugEnabled) log.Debug("Received a request response for SchoolInfo in Zone " + zone.ZoneId + ".");
+            if (log.IsDebugEnabled) log.Debug("Received a request response for SchoolInfo in Zone " + zone.ZoneId + ":\n" + sifDataObject.ToXml());
         }
 
     }

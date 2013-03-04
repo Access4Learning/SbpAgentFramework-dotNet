@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 namespace Systemic.Sif.Sbp.Framework.Service
 {
 
+    /// <summary>
+    /// This interface specifies operations used by the synchronisation functionality.
+    /// </summary>
     public interface ISyncService
     {
 

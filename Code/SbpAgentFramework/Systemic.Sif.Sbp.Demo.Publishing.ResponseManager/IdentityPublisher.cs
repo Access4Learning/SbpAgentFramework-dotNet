@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2012-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,38 +15,16 @@
 
 using OpenADK.Library;
 using OpenADK.Library.au.Infrastructure;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 {
 
     /// <summary>
-    /// Publisher of Identity SIF Objects.
+    /// Publisher of Identity SIF Data Objects.
     /// </summary>
     class IdentityPublisher : Systemic.Sif.Sbp.Framework.Publisher.Baseline.IdentityPublisher
     {
-        // Create a logger for use in this class.
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private AgentProperties agentProperties;
-
-        public override int EventFrequency
-        {
-            get { return agentProperties.GetProperty("publisher." + SifObjectType.Name + ".eventFrequency", 3600000); }
-            set { }
-        }
-
-        /// <summary>
-        /// Create an instance of an IdentityPublisher.
-        /// </summary>
-        /// <param name="agentConfig">SIF Agent configuration settings.</param>
-        public IdentityPublisher(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
 
         /// <summary>
         /// Return an iterator of events for the Identity SIF Object.

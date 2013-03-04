@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2012 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
 
     /// <summary>
     /// This class manages SIF requests through the use of configuration specified in database tables rather than
-    /// through the default behaviour of the SIF Common Framework. By default, this class checks the database table
-    /// hourly (through the use of RequestFrequency) to determine whether a SIF request is required.
+    /// through the default behaviour of the SIF Common Framework. It checks the database table (with MakeRequest) at
+    /// specific intervals (based on RequestFrequency) to determine whether a SIF request is required.
     /// </summary>
     /// <typeparam name="T">The type of SIF Data Object this Subscriber processes, e.g. StudentPersonal, Schoolnfo.</typeparam>
     public abstract class SyncSubscriber<T> : GenericSubscriber<T> where T : SifDataObject, new()
@@ -32,21 +32,10 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        int requestFrequency = 0; // Not enabled.
         ISyncService syncService = new SyncService();
 
         /// <summary>
-        /// Frequency (in milliseconds) that the database table is checked to determine whether a SIF request is
-        /// required.
-        /// </summary>
-        protected override int RequestFrequency
-        {
-            get { return requestFrequency; }
-            set { requestFrequency = value; }
-        }
-
-        /// <summary>
-        /// Default constructor.
+        /// Create an instance of the Subscriber without referencing the Agent configuration settings.
         /// </summary>
         public SyncSubscriber()
             : base()
@@ -54,9 +43,10 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber
         }
 
         /// <summary>
-        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// Create an instance of the Subscriber based upon the Agent configuration settings.
         /// </summary>
-        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public SyncSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {

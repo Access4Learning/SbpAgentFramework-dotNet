@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ using Systemic.Sif.Sbp.Framework.Persistence.NHibernate;
 namespace Systemic.Sif.Sbp.Framework.Service
 {
 
+    /// <summary>
+    /// This class cotains operations used by the Dependent Object Cache (DOC).
+    /// </summary>
     public class DependentObjectCacheService : IDependentObjectCacheService
     {
         // Create a logger for use in this class.
@@ -42,6 +45,7 @@ namespace Systemic.Sif.Sbp.Framework.Service
             dependentObjectDao.Delete(dependentObject);
         }
 
+        /// <see cref="Systemic.Sif.Sbp.Framework.Service.IDependentObjectCacheService.MarkAsRequested(DependentObject, string, string)">MarkAsRequested</see>
         public void MarkAsRequested(DependentObject dependentObject, string agentId, string zoneId)
         {
 

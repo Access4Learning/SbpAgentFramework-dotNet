@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 using System;
 using OpenADK.Library;
 using OpenADK.Library.au.Student;
-using OpenADK.Library.Tools.Cfg;
 using Systemic.Sif.Framework.Publisher;
 
 namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
 {
 
+    /// <summary>
+    /// Publisher of StudentPersonal SIF Data Objects.
+    /// </summary>
     class StudentPersonalPublisher : Systemic.Sif.Sbp.Framework.Publisher.Baseline.StudentPersonalPublisher
     {
         // Create a logger for use in this class.
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private AgentProperties agentProperties;
-
-        public override int EventFrequency
-        {
-            get { return agentProperties.GetProperty("publisher." + SifObjectType.Name + ".eventFrequency", 0); }
-            set { }
-        }
-
+        /// <summary>
+        /// This method will examine the query and extract the relevant StudentPersonal SIF RefId for responding to
+        /// the request.
+        /// </summary>
+        /// <param name="query">The SIF Query of the received request.</param>
+        /// <returns>StudentPersonal SIF RefId associated with the request.</returns>
         private string ExtractPrimaryKey(Query query)
         {
             string key = null;
@@ -62,18 +62,22 @@ namespace Systemic.Sif.Sbp.Demo.Publishing.ResponseManager
             return key;
         }
 
-        public StudentPersonalPublisher(AgentConfig agentConfig)
-            : base(agentConfig)
-        {
-            agentProperties = new AgentProperties(null);
-            AgentConfiguration.GetAgentProperties(agentProperties);
-        }
-
+        /// <summary>
+        /// Return an iterator of events for the StudentPersonal SIF Object.
+        /// </summary>
+        /// <returns>Iterator of events for the StudentPersonal SIF Object.</returns>
         public override ISifEventIterator<StudentPersonal> GetSifEvents()
         {
             return new StudentPersonalIterator(null);
         }
 
+        /// <summary>
+        /// Return an iterator of responses for the StudentPersonal SIF Object based upon the condition within the
+        /// SIF Query.
+        /// </summary>
+        /// <param name="query">Specific query to be executed.</param>
+        /// <param name="zone">Zone to use.</param>
+        /// <returns>Iterator of responses for the StudentPersonal SIF Object.</returns>
         public override ISifResponseIterator<StudentPersonal> GetSifResponses(Query query, IZone zone)
         {
             StudentPersonalIterator studentPersonalIterator = null;

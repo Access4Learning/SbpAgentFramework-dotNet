@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Systemic.Sif.Sbp.Framework.Publisher
     {
 
         /// <summary>
-        /// Default constructor.
+        /// Create an instance of the Publisher without referencing the Agent configuration settings.
         /// </summary>
         public GenericPublisher()
             : base()
@@ -35,9 +35,10 @@ namespace Systemic.Sif.Sbp.Framework.Publisher
         }
 
         /// <summary>
-        /// This constructor specifies the configuration settings associated with this Publisher.
+        /// Create an instance of the Publisher based upon the Agent configuration settings.
         /// </summary>
-        /// <param name="agentConfig">Configuration settings associated with this Publisher.</param>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public GenericPublisher(AgentConfig agentConfig)
             : base(agentConfig)
         {

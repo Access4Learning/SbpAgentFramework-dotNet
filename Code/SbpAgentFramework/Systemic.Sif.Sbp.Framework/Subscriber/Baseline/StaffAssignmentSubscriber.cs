@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Systemic Pty Ltd
+* Copyright 2011-2013 Systemic Pty Ltd
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
     {
 
         /// <summary>
-        /// Default constructor.
+        /// Create an instance of the Subscriber without referencing the Agent configuration settings.
         /// </summary>
         public StaffAssignmentSubscriber()
             : base()
@@ -35,19 +35,20 @@ namespace Systemic.Sif.Sbp.Framework.Subscriber.Baseline
         }
 
         /// <summary>
-        /// This constructor specifies the configuration settings associated with this Subscriber.
+        /// Create an instance of the Subscriber based upon the Agent configuration settings.
         /// </summary>
-        /// <param name="agentConfig">Configuration settings associated with this Subscriber.</param>
+        /// <param name="agentConfig">Agent configuration settings.</param>
+        /// <exception cref="System.ArgumentException">agentConfig parameter is null.</exception>
         public StaffAssignmentSubscriber(AgentConfig agentConfig)
             : base(agentConfig)
         {
         }
 
         /// <summary>
-        /// This (factory) method returns meta-data associated with the StaffAssignment instance passed.
+        /// This method returns metadata associated with the StaffAssignment instance passed.
         /// </summary>
         /// <param name="staffAssignment">StaffAssignment instance.</param>
-        /// <returns>Meta-data associated with the StaffAssignment instance.</returns>
+        /// <returns>Metadata associated with the StaffAssignment instance.</returns>
         internal override SifDataObjectMetadata<StaffAssignment> MetadataInstance(StaffAssignment staffAssignment)
         {
             return new StaffAssignmentMetadata(staffAssignment);
