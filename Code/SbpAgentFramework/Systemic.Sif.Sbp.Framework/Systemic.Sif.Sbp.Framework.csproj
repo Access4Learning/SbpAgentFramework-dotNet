@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Systemic.Sif.Sbp.Framework</RootNamespace>
     <AssemblyName>Systemic.Sif.Sbp.Framework</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,11 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.2.0\log4net.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.3.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -42,15 +44,15 @@
     </Reference>
     <Reference Include="OpenADK.Core, Version=9.2.4.12, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.2.0\OpenADK.Core.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.3.0\OpenADK.Core.dll</HintPath>
     </Reference>
     <Reference Include="OpenADK.SDO-AU, Version=9.2.4.12, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.2.0\OpenADK.SDO-AU.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.3.0\OpenADK.SDO-AU.dll</HintPath>
     </Reference>
     <Reference Include="Org.Mentalis.Security, Version=1.0.14.25108, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.2.0\Org.Mentalis.Security.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\OpenADK.Net-2.3.0\Org.Mentalis.Security.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,7 +63,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Systemic.Sif.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\Systemic.Sif.Framework 4.1.0\Systemic.Sif.Framework.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\Systemic.Sif.Framework 4.2.0\Systemic.Sif.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
