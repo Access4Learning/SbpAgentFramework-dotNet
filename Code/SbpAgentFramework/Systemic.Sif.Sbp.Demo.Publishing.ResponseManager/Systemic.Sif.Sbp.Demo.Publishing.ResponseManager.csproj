@@ -60,9 +60,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Systemic.Sif.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Systemic.Sif.Framework, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\Systemic.Sif.Framework 4.2.0\Systemic.Sif.Framework.dll</HintPath>
+      <HintPath>..\..\..\SharedLibs\Systemic.Sif.Framework 4.3.0\Systemic.Sif.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
